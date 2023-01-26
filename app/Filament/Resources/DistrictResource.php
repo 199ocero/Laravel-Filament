@@ -24,7 +24,9 @@ class DistrictResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->string()
             ]);
     }
 
@@ -32,7 +34,10 @@ class DistrictResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->label('District Name')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 //
