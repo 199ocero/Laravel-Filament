@@ -4,21 +4,16 @@ namespace App\Filament\Resources\DistrictResource\Pages;
 
 use App\Filament\Resources\DistrictResource;
 use Filament\Pages\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ManageRecords;
 
-class EditDistrict extends EditRecord
+class ManageDistricts extends ManageRecords
 {
     protected static string $resource = DistrictResource::class;
 
     protected function getActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\CreateAction::make(),
         ];
-    }
-
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
     }
 }

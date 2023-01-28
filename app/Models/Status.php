@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class District extends Model
+class Status extends Model
 {
     use HasFactory;
 
@@ -17,11 +17,6 @@ class District extends Model
     protected $fillable = [
         'name',
     ];
-
-    public function campus()
-    {
-        return $this->hasMany(Campus::class);
-    }
 
     public function schoolYear()
     {

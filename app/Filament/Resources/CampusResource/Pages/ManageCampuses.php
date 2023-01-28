@@ -4,21 +4,16 @@ namespace App\Filament\Resources\CampusResource\Pages;
 
 use App\Filament\Resources\CampusResource;
 use Filament\Pages\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ManageRecords;
 
-class EditCampus extends EditRecord
+class ManageCampuses extends ManageRecords
 {
     protected static string $resource = CampusResource::class;
 
     protected function getActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\CreateAction::make(),
         ];
-    }
-
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
     }
 }

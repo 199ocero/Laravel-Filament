@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CampusResource\Pages;
-use App\Filament\Resources\CampusResource\RelationManagers;
-use App\Models\Campus;
+use App\Filament\Resources\StatusResource\Pages;
+use App\Filament\Resources\StatusResource\RelationManagers;
+use App\Models\Status;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -13,14 +13,15 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CampusResource extends Resource
+class StatusResource extends Resource
 {
-    protected static ?string $model = Campus::class;
+    protected static ?string $model = Status::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-    protected static ?string $navigationGroup = 'Data Management';
-    protected static ?int $navigationSort = 3;
 
+    protected static ?string $navigationGroup = 'Data Management';
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -30,10 +31,6 @@ class CampusResource extends Resource
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->string(),
-                Forms\Components\Select::make('district_id')
-                    ->required()
-                    ->relationship('district', 'name'),
-
             ]);
     }
 
@@ -42,11 +39,7 @@ class CampusResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Campus')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('district.name')
-                    ->label('District')
+                    ->label('Status')
                     ->sortable()
                     ->searchable(),
             ])
@@ -65,7 +58,7 @@ class CampusResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageCampuses::route('/'),
+            'index' => Pages\ManageStatuses::route('/'),
         ];
     }
 }

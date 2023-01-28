@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class District extends Model
+class SchoolYear extends Model
 {
     use HasFactory;
 
@@ -15,16 +15,24 @@ class District extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'district_id',
+        'campus_id',
         'name',
+        'status_id',
     ];
 
     public function campus()
     {
-        return $this->hasMany(Campus::class);
+        return $this->belongsTo(Campus::class);
     }
 
-    public function schoolYear()
+    public function district()
     {
-        return $this->hasMany(SchoolYear::class);
+        return $this->belongsTo(District::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
     }
 }
