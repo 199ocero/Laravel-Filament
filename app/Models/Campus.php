@@ -38,4 +38,9 @@ class Campus extends Model
     {
         return $this->hasMany(Semester::class);
     }
+
+    public function department()
+    {
+        return $this->hasMany(Semester::class);
+    }
 }
