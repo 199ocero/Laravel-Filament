@@ -99,7 +99,8 @@ class SchoolYearResource extends Resource
                     ->label('School Year')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status.name')
+                Tables\Columns\ViewColumn::make('status.name')
+                    ->view('filament.tables.columns.status')
                     ->label('Status')
                     ->sortable()
                     ->searchable(),
