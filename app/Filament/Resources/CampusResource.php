@@ -17,7 +17,7 @@ class CampusResource extends Resource
 {
     protected static ?string $model = Campus::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-library';
     protected static ?string $navigationGroup = 'Data Management';
     protected static ?int $navigationSort = 3;
 

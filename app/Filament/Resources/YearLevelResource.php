@@ -20,7 +20,7 @@ class YearLevelResource extends Resource
 {
     protected static ?string $model = YearLevel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-chevron-double-up';
     protected static ?string $navigationGroup = 'Data Management';
     protected static ?int $navigationSort = 5;
 
@@ -92,6 +92,10 @@ class YearLevelResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->mutateRecordDataUsing(function (array $data) use (&$yearLevelId): array {
+
+                        $campus = Campus::find($data['campus_id']);
+                        $data['district_id'] = $campus->district_id;
+
                         $yearLevelId = $data['id'];
                         return $data;
                     }),

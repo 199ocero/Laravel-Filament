@@ -17,7 +17,7 @@ class DistrictResource extends Resource
 {
     protected static ?string $model = District::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-location-marker';
     protected static ?string $navigationGroup = 'Data Management';
 
     protected static ?int $navigationSort = 2;
