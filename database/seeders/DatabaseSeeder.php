@@ -20,5 +20,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => Hash::make('shutdown199')
         ]);
+
+        $this->call(StatusSeeder::class);
+        $this->call(DistrictSeeder::class);
+        $this->call(CampusSeeder::class);
+        $this->call(SchoolYearSeeder::class);
+        $this->call(YearLevelSeeder::class);
     }
 }
