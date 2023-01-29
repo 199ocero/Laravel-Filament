@@ -8,4 +8,25 @@ use Illuminate\Database\Eloquent\Model;
 class YearLevel extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'district_id',
+        'campus_id',
+        'name',
+    ];
+
+    public function campus()
+    {
+        return $this->belongsTo(Campus::class);
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
 }

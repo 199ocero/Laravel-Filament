@@ -31,6 +31,9 @@ class StatusResource extends Resource
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->string(),
+                Forms\Components\TextInput::make('sample')
+                    ->dehydrated(false)
+                    ->string(),
             ]);
     }
 

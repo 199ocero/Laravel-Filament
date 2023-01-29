@@ -23,8 +23,14 @@ class Campus extends Model
     {
         return $this->belongsTo(District::class);
     }
+
     public function schoolYear()
     {
         return $this->hasMany(SchoolYear::class);
+    }
+
+    public function yearLevel()
+    {
+        return $this->hasMany(YearLevel::class);
     }
 }

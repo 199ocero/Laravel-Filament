@@ -27,4 +27,9 @@ class District extends Model
     {
         return $this->hasMany(SchoolYear::class);
     }
+
+    public function yearLevel()
+    {
+        return $this->hasMany(YearLevel::class);
+    }
 }
