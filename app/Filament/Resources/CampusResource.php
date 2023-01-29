@@ -28,6 +28,7 @@ class CampusResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->label('Campus')
                     ->unique(ignoreRecord: true)
                     ->string()
                     ->placeholder('e.g. Campus A'),

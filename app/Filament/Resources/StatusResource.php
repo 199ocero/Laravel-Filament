@@ -29,6 +29,7 @@ class StatusResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->label('Status')
                     ->unique(ignoreRecord: true)
                     ->string()
                     ->placeholder('e.g. Active'),

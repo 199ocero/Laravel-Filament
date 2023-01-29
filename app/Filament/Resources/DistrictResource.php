@@ -28,6 +28,7 @@ class DistrictResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->label('District')
                     ->unique(ignoreRecord: true)
                     ->string()
                     ->placeholder('e.g. District 1')

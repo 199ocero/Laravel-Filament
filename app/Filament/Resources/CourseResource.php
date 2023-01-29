@@ -2,30 +2,29 @@
 
 namespace App\Filament\Resources;
 
-use Closure;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Campus;
+use App\Models\Course;
 use App\Models\District;
-use App\Models\Department;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\CourseResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\DepartmentResource\Pages;
-use App\Filament\Resources\DepartmentResource\RelationManagers;
+use App\Filament\Resources\CourseResource\RelationManagers;
+use App\Models\Department;
 
-class DepartmentResource extends Resource
+class CourseResource extends Resource
 {
-    protected static ?string $model = Department::class;
+    protected static ?string $model = Course::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-puzzle';
+    protected static ?string $navigationIcon = 'heroicon-o-bookmark';
     protected static ?string $navigationGroup = 'Data Management';
-    protected static ?int $navigationSort = 7;
-    public $departmentId;
+    protected static ?int $navigationSort = 8;
 
-    public static function form(Form $form, $departmentId = 0): Form
+    public static function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -40,36 +39,40 @@ class DepartmentResource extends Resource
                 Forms\Components\Select::make('campus_id')
                     ->required()
                     ->label('Campus')
+                    ->dehydrated(false)
                     ->options(function ($get) {
                         $campuses = Campus::where('district_id', $get('district_id'))->get();
 
                         if ($campuses) {
                             return $campuses->pluck('name', 'id');
                         }
+                    })
+                    ->reactive()
+                    ->afterStateUpdated(fn (callable $set) => $set('department_id', null)),
+
+                Forms\Components\Select::make('department_id')
+                    ->required()
+                    ->label('Department')
+                    ->options(function ($get) {
+                        $department = Department::where('campus_id', $get('campus_id'))->get();
+
+                        if ($department) {
+                            return $department->pluck('name', 'id');
+                        }
                     }),
-                Forms\Components\TextInput::make('id')
-                    ->default($departmentId)
-                    ->dehydrated(false)
-                    ->hidden(),
+
+                Forms\Components\TextInput::make('code')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->string()
+                    ->placeholder('e.g. BSIT'),
 
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->label('Department')
-                    ->placeholder('e.g. Technology')
-                    ->rules([
-                        function ($get) {
-                            return function (string $attribute, $value, Closure $fail) use ($get) {
-                                $record = Department::where('name', $value)
-                                    ->where('campus_id', $get('campus_id'))
-                                    ->where('id', '!=', $get('id'))->first();
-                                if ($record) {
-                                    $fail("The deparment $value already exists in selected district and campus.");
-                                }
-                            };
-                        },
-                    ])
-                    ->string(),
-
+                    ->label('Course')
+                    ->unique(ignoreRecord: true)
+                    ->string()
+                    ->placeholder('e.g. Bachelor of Science in Information Technology')
             ]);
     }
 
@@ -77,16 +80,24 @@ class DepartmentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('campus.district.name')
+                Tables\Columns\TextColumn::make('department.campus.district.name')
                     ->label('District')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('campus.name')
+                Tables\Columns\TextColumn::make('department.campus.name')
                     ->label('Campus')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('department.name')
                     ->label('Department')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('code')
+                    ->label('Code')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Course')
                     ->sortable()
                     ->searchable(),
             ])
@@ -97,10 +108,17 @@ class DepartmentResource extends Resource
                 Tables\Actions\EditAction::make()
                     ->mutateRecordDataUsing(function (array $data) use (&$departmentId): array {
 
-                        $campus = Campus::find($data['campus_id']);
+                        $department = Department::find($data['department_id']);
+                        $campus = Campus::find($department->campus_id);
+
                         $data['district_id'] = $campus->district_id;
 
+                        $data['campus_id'] = $department->campus_id;
+
+                        $data['department_id'] = $department->id;
+
                         $departmentId = $data['id'];
+
                         return $data;
                     }),
                 Tables\Actions\DeleteAction::make(),
@@ -113,7 +131,7 @@ class DepartmentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageDepartments::route('/'),
+            'index' => Pages\ManageCourses::route('/'),
         ];
     }
 }

@@ -35,6 +35,7 @@ class SchoolYearResource extends Resource
             ->schema([
                 Forms\Components\Select::make('district_id')
                     ->required()
+                    ->label('District')
                     ->dehydrated(false)
                     ->options(District::all()->pluck('name', 'id'))
                     ->reactive()
@@ -99,11 +100,10 @@ class SchoolYearResource extends Resource
                     ->label('School Year')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\ViewColumn::make('status.name')
-                    ->view('filament.tables.columns.status')
+                Tables\Columns\TextColumn::make('status.name')
                     ->label('Status')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
 
             ])
             ->filters([

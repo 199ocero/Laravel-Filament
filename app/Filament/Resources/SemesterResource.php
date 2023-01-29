@@ -32,6 +32,7 @@ class SemesterResource extends Resource
             ->schema([
                 Forms\Components\Select::make('district_id')
                     ->required()
+                    ->label('District')
                     ->dehydrated(false)
                     ->options(District::all()->pluck('name', 'id'))
                     ->reactive()
@@ -39,6 +40,7 @@ class SemesterResource extends Resource
 
                 Forms\Components\Select::make('campus_id')
                     ->required()
+                    ->label('Campus')
                     ->options(function ($get) {
                         $campuses = Campus::where('district_id', $get('district_id'))->get();
 
@@ -53,6 +55,7 @@ class SemesterResource extends Resource
 
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->label('Semester')
                     ->placeholder('e.g. 1st Semester')
                     ->rules([
                         function ($get) {

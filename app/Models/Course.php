@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Department extends Model
+class Course extends Model
 {
     use HasFactory;
 
@@ -15,17 +15,13 @@ class Department extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'campus_id',
+        'department_id',
+        'code',
         'name',
     ];
 
-    public function campus()
+    public function department()
     {
-        return $this->belongsTo(Campus::class);
-    }
-
-    public function course()
-    {
-        return $this->hasMany(Course::class);
+        return $this->belongsTo(Department::class);
     }
 }
