@@ -30,10 +30,8 @@ class StatusResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->unique(ignoreRecord: true)
-                    ->string(),
-                Forms\Components\TextInput::make('sample')
-                    ->dehydrated(false)
-                    ->string(),
+                    ->string()
+                    ->placeholder('e.g. Active'),
             ]);
     }
 

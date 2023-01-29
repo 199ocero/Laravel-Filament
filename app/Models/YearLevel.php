@@ -15,7 +15,6 @@ class YearLevel extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'district_id',
         'campus_id',
         'name',
     ];
@@ -23,10 +22,5 @@ class YearLevel extends Model
     public function campus()
     {
         return $this->belongsTo(Campus::class);
-    }
-
-    public function district()
-    {
-        return $this->belongsTo(District::class);
     }
 }

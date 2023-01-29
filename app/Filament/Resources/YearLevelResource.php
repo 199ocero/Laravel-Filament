@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use Closure;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Campus;
+use App\Models\District;
 use App\Models\YearLevel;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
@@ -22,13 +24,16 @@ class YearLevelResource extends Resource
     protected static ?string $navigationGroup = 'Data Management';
     protected static ?int $navigationSort = 5;
 
-    public static function form(Form $form): Form
+    public $yearLevelId;
+
+    public static function form(Form $form, $yearLevelId = 0): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('district_id')
                     ->required()
-                    ->relationship('district', 'name')
+                    ->dehydrated(false)
+                    ->options(District::all()->pluck('name', 'id'))
                     ->reactive()
                     ->afterStateUpdated(fn (callable $set) => $set('campus_id', null)),
 
@@ -41,9 +46,24 @@ class YearLevelResource extends Resource
                             return $campuses->pluck('name', 'id');
                         }
                     }),
+                Forms\Components\TextInput::make('id')
+                    ->default($yearLevelId)
+                    ->dehydrated(false),
+
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->unique(ignoreRecord: true)
+                    ->rules([
+                        function ($get) {
+                            return function (string $attribute, $value, Closure $fail) use ($get) {
+                                $record = YearLevel::where('name', $value)
+                                    ->where('campus_id', $get('campus_id'))
+                                    ->where('id', '!=', $get('id'))->first();
+                                if ($record) {
+                                    $fail("The year level $value already exists in selected district and campus.");
+                                }
+                            };
+                        },
+                    ])
                     ->string(),
             ]);
     }
@@ -52,7 +72,7 @@ class YearLevelResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('district.name')
+                Tables\Columns\TextColumn::make('campus.district.name')
                     ->label('District')
                     ->sortable()
                     ->searchable(),
@@ -69,7 +89,11 @@ class YearLevelResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->mutateRecordDataUsing(function (array $data) use (&$yearLevelId): array {
+                        $yearLevelId = $data['id'];
+                        return $data;
+                    }),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

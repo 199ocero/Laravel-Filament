@@ -29,7 +29,9 @@ class CampusResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->unique(ignoreRecord: true)
-                    ->string(),
+                    ->string()
+                    ->placeholder('e.g. Campus A'),
+
                 Forms\Components\Select::make('district_id')
                     ->required()
                     ->relationship('district', 'name'),
@@ -45,6 +47,7 @@ class CampusResource extends Resource
                     ->label('Campus')
                     ->sortable()
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('district.name')
                     ->label('District')
                     ->sortable()

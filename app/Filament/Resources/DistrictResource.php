@@ -30,6 +30,7 @@ class DistrictResource extends Resource
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->string()
+                    ->placeholder('e.g. District 1')
             ]);
     }
 
