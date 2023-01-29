@@ -48,7 +48,8 @@ class YearLevelResource extends Resource
                     }),
                 Forms\Components\TextInput::make('id')
                     ->default($yearLevelId)
-                    ->dehydrated(false),
+                    ->dehydrated(false)
+                    ->hidden(),
 
                 Forms\Components\TextInput::make('name')
                     ->required()
