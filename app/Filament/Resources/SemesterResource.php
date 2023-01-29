@@ -7,26 +7,26 @@ use Filament\Forms;
 use Filament\Tables;
 use App\Models\Campus;
 use App\Models\District;
-use App\Models\YearLevel;
+use App\Models\Semester;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\YearLevelResource\Pages;
+use App\Filament\Resources\SemesterResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\YearLevelResource\RelationManagers;
+use App\Filament\Resources\SemesterResource\RelationManagers;
 
-class YearLevelResource extends Resource
+class SemesterResource extends Resource
 {
-    protected static ?string $model = YearLevel::class;
+    protected static ?string $model = Semester::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-chevron-double-up';
+    protected static ?string $navigationIcon = 'heroicon-o-lightning-bolt';
     protected static ?string $navigationGroup = 'Data Management';
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 6;
 
-    public $yearLevelId;
+    public $semesterId;
 
-    public static function form(Form $form, $yearLevelId = 0): Form
+    public static function form(Form $form, $semesterId = 0): Form
     {
         return $form
             ->schema([
@@ -47,21 +47,21 @@ class YearLevelResource extends Resource
                         }
                     }),
                 Forms\Components\TextInput::make('id')
-                    ->default($yearLevelId)
+                    ->default($semesterId)
                     ->dehydrated(false)
                     ->hidden(),
 
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->placeholder('e.g. 1st Year')
+                    ->placeholder('e.g. 1st Semester')
                     ->rules([
                         function ($get) {
                             return function (string $attribute, $value, Closure $fail) use ($get) {
-                                $record = YearLevel::where('name', $value)
+                                $record = Semester::where('name', $value)
                                     ->where('campus_id', $get('campus_id'))
                                     ->where('id', '!=', $get('id'))->first();
                                 if ($record) {
-                                    $fail("The year level $value already exists in selected district and campus.");
+                                    $fail("The semester $value already exists in selected district and campus.");
                                 }
                             };
                         },
@@ -83,7 +83,7 @@ class YearLevelResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Year Level')
+                    ->label('Semester')
                     ->sortable()
                     ->searchable(),
             ])
@@ -92,12 +92,12 @@ class YearLevelResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->mutateRecordDataUsing(function (array $data) use (&$yearLevelId): array {
+                    ->mutateRecordDataUsing(function (array $data) use (&$semesterId): array {
 
                         $campus = Campus::find($data['campus_id']);
                         $data['district_id'] = $campus->district_id;
 
-                        $yearLevelId = $data['id'];
+                        $semesterId = $data['id'];
                         return $data;
                     }),
                 Tables\Actions\DeleteAction::make(),
@@ -110,7 +110,7 @@ class YearLevelResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageYearLevels::route('/'),
+            'index' => Pages\ManageSemesters::route('/'),
         ];
     }
 }
