@@ -43,4 +43,9 @@ class Campus extends Model
     {
         return $this->hasMany(Semester::class);
     }
+
+    public function section()
+    {
+        return $this->hasMany(Section::class);
+    }
 }
