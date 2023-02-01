@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use Closure;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Campus;
 use App\Models\Course;
 use App\Models\District;
+use App\Models\Department;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
@@ -14,7 +16,6 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\CourseResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CourseResource\RelationManagers;
-use App\Models\Department;
 
 class CourseResource extends Resource
 {
@@ -63,14 +64,44 @@ class CourseResource extends Resource
 
                 Forms\Components\TextInput::make('code')
                     ->required()
-                    ->unique(ignoreRecord: true)
+                    ->rules([
+                        function ($get) {
+                            return function (string $attribute, $value, Closure $fail) use ($get) {
+                                $department = Department::where('id', $get('department_id'))->where('campus_id', $get('campus_id'))->get();
+                                if ($department) {
+                                    $campus = Campus::where('district_id', $get('district_id'))->get();
+                                    if ($campus) {
+                                        $record = Course::where('code', $value)->where('id', '!=', $get('id'))->first();
+                                        if ($record) {
+                                            $fail("The code $value already exists in selected district, campus and department.");
+                                        }
+                                    }
+                                }
+                            };
+                        },
+                    ])
                     ->string()
                     ->placeholder('e.g. BSIT'),
 
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->label('Course')
-                    ->unique(ignoreRecord: true)
+                    ->rules([
+                        function ($get) {
+                            return function (string $attribute, $value, Closure $fail) use ($get) {
+                                $department = Department::where('id', $get('department_id'))->where('campus_id', $get('campus_id'))->get();
+                                if ($department) {
+                                    $campus = Campus::where('district_id', $get('district_id'))->get();
+                                    if ($campus) {
+                                        $record = Course::where('name', $value)->where('id', '!=', $get('id'))->first();
+                                        if ($record) {
+                                            $fail("The name $value already exists in selected district, campus and department.");
+                                        }
+                                    }
+                                }
+                            };
+                        },
+                    ])
                     ->string()
                     ->placeholder('e.g. Bachelor of Science in Information Technology')
             ]);
