@@ -18,6 +18,8 @@ class StudentResource extends Resource
     protected static ?string $model = Student::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static ?string $navigationGroup = 'User Management';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -27,65 +29,68 @@ class StudentResource extends Resource
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->numeric()
-                    ->length(12),
+                    ->length(12)
+                    ->placeholder('e.g. 784172592979'),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
-                    ->unique(ignoreRecord: true),
+                    ->unique(ignoreRecord: true)
+                    ->placeholder('e.g. student@gmail.com'),
                 Forms\Components\TextInput::make('first_name')
+                    ->label('First Name')
                     ->required()
-                    ->string(),
+                    ->string()
+                    ->placeholder('e.g. Jhon'),
                 Forms\Components\TextInput::make('middle_name')
+                    ->label('Middle Name')
                     ->required()
-                    ->string(),
+                    ->string()
+                    ->placeholder('Pales'),
                 Forms\Components\TextInput::make('last_name')
+                    ->label('Last Name')
                     ->required()
-                    ->string(),
+                    ->string()
+                    ->placeholder('e.g. Doe'),
                 Forms\Components\TextInput::make('suffix')
                     ->nullable()
-                    ->string(),
+                    ->string()
+                    ->placeholder('e.g. Jr.'),
                 Forms\Components\DatePicker::make('birthday')
                     ->required()
+                    ->placeholder('e.g. September 10, 1992')
             ]);
     }
+
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('lrn')->sortable(),
+                Tables\Columns\TextColumn::make('lrn')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('email')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('first_name')->sortable()->label('First Name'),
-                Tables\Columns\TextColumn::make('middle_name')->sortable(),
-                Tables\Columns\TextColumn::make('last_name')->sortable(),
-                Tables\Columns\TextColumn::make('suffix')->sortable(),
-                Tables\Columns\TextColumn::make('birthday')->date()->sortable(),
+                Tables\Columns\TextColumn::make('first_name')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('middle_name')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('last_name')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('suffix')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('birthday')->date()->sortable()->searchable(),
             ])
-            ->defaultSort('first_name', 'asc')
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListStudents::route('/'),
-            'create' => Pages\CreateStudent::route('/create'),
-            'edit' => Pages\EditStudent::route('/{record}/edit'),
+            'index' => Pages\ManageStudents::route('/'),
         ];
     }
 }
