@@ -31,6 +31,8 @@ class ManageStudents extends ManageRecords
                     $user->password = Hash::make($data['birthday']);
                     $user->save();
 
+                    $user->assignRole('student');
+
                     $data['user_id'] = $user->id;
 
                     return $data;

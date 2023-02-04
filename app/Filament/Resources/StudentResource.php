@@ -57,7 +57,7 @@ class StudentResource extends Resource
                     ->placeholder('e.g. Jr.'),
                 Forms\Components\DatePicker::make('birthday')
                     ->required()
-                    ->placeholder('e.g. September 10, 1992')
+                    ->placeholder('e.g. September 10, 1992'),
             ]);
     }
 

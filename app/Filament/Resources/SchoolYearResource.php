@@ -12,6 +12,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Illuminate\Validation\Rules\Unique;
+use Filament\Tables\Columns\BadgeColumn;
 use Illuminate\Database\Eloquent\Builder;
 use App\Rules\SchoolYear as RulesSchoolYear;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -100,10 +101,11 @@ class SchoolYearResource extends Resource
                     ->label('School Year')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status.name')
-                    ->label('Status')
-                    ->sortable()
-                    ->searchable()
+                BadgeColumn::make('status.name')
+                    ->colors([
+                        'success' => 'Active',
+                        'danger' => 'Inactive',
+                    ])
 
             ])
             ->filters([
