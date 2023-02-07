@@ -2,16 +2,19 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\StudentResource\Pages;
-use App\Filament\Resources\StudentResource\RelationManagers;
-use App\Models\Student;
 use Filament\Forms;
-use Filament\Resources\Form;
-use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use App\Models\User;
 use Filament\Tables;
+use App\Models\Student;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use Filament\Resources\Resource;
+use Spatie\Permission\Models\Role;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\StudentResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\StudentResource\RelationManagers;
 
 class StudentResource extends Resource
 {
@@ -79,7 +82,14 @@ class StudentResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('Delete')
+                    ->action(function (Model $record) {
+                        dd($reocrd)
+                    })
+                    ->icon('heroicon-s-trash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
