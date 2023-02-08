@@ -84,7 +84,10 @@ class StudentResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('Delete')
                     ->action(function (Model $record) {
-                        dd($reocrd)
+                        $user = User::find($record->user_id);
+                        $user->removeRole('student');
+                        $record->delete();
+                        $user->delete();
                     })
                     ->icon('heroicon-s-trash')
                     ->color('danger')

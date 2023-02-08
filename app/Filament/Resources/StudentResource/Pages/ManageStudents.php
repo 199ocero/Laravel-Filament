@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\StudentResource\Pages;
 
 use App\Models\User;
+use App\Models\Student;
 use Filament\Pages\Actions;
 use App\Services\ImportService;
 use Spatie\Permission\Models\Role;
@@ -60,14 +61,31 @@ class ManageStudents extends ManageRecords
                         ->label('Middle Name')
                         ->required(),
                     ImportField::make('last_name')
-                        ->label('Email')
+                        ->label('Last Name')
                         ->required(),
                     ImportField::make('suffix')
-                        ->label('Email'),
+                        ->label('Suffix'),
                     ImportField::make('birthday')
                         ->label('Birthday')
                         ->required(),
                 ], columns: 3)
+                ->handleRecordCreation(function ($data) {
+                    if (!Role::where('name', 'student')->exists()) {
+                        Role::create(['name' => 'student']);
+                    }
+
+                    $user = new User();
+                    $user->name = $data['first_name'] . ' ' . $data['middle_name'] . ' ' . $data['last_name'];
+                    $user->email = $data['email'];
+                    $user->password = Hash::make($data['birthday']);
+                    $user->save();
+
+                    $user->assignRole('student');
+
+                    $data['user_id'] = $user->id;
+
+                    return Student::create($data);
+                })
         ];
     }
 }
