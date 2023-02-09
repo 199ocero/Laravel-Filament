@@ -71,10 +71,7 @@ class StudentResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('lrn')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('email')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('first_name')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('middle_name')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('last_name')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('suffix')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('full_name')->searchable(['first_name', 'last_name']),
                 Tables\Columns\TextColumn::make('birthday')->date()->sortable()->searchable(),
             ])
             ->filters([
