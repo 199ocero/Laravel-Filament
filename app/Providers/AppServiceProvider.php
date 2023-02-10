@@ -29,5 +29,10 @@ class AppServiceProvider extends ServiceProvider
             'User Management',
             'Data Management',
         ]);
+
+        Filament::serving(function () {
+            // Using Vite
+            Filament::registerViteTheme('resources/css/filament.css');
+        });
     }
 }
