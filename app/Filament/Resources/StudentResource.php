@@ -34,6 +34,11 @@ class StudentResource extends Resource
                     ->numeric()
                     ->length(12)
                     ->placeholder('e.g. 784172592979'),
+                Forms\Components\TextInput::make('student_no')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->regex('/^\d{2}-\d{4}$/')
+                    ->placeholder('e.g. ##-####'),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
@@ -69,7 +74,7 @@ class StudentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('lrn')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('student_no')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('email')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('full_name')->searchable(['first_name', 'last_name']),
                 Tables\Columns\TextColumn::make('birthday')->date()->sortable()->searchable(),
